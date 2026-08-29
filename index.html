@@ -390,6 +390,8 @@
                     document.getElementById('statTotalSrts').textContent = data.stats.totalSrts.toLocaleString();
 
                     initCharts(data.stats.dailyUsers.reverse(), data.stats.dailySrts.reverse());
+                } else {
+                    console.error('API Error in fetchStats:', data.error);
                 }
             } catch (e) {
                 console.error('Failed to fetch stats', e);
@@ -495,16 +497,18 @@
               </td>
               <td class="py-4 px-4 text-gray-400 text-xs">${new Date(u.timestamp).toLocaleString()}</td>
               <td class="py-4 px-4 text-right">
-                <button onclick="deleteUser(${u.id}, '${u.email}')" class="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all opacity-50 group-hover:opacity-100">
+                <button onclick="deleteUser('${u.id}', '${u.email}')" class="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all opacity-50 group-hover:opacity-100">
                   <i data-lucide="trash-2" class="w-4 h-4"></i>
                 </button>
               </td>
             </tr>
           `).join('');
                     lucide.createIcons();
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="4" class="text-center py-8 text-red-400">Server Error: ${data.error || 'Unknown error'}</td></tr>`;
                 }
             } catch (e) {
-                tbody.innerHTML = '<tr><td colspan="4" class="text-center py-8 text-red-400">Failed to load users</td></tr>';
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-8 text-red-400">Network Error: ${e.message}</td></tr>`;
             }
         }
 
